@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <form>
+    <form action="/admin/quadras" method="POST" >
         <div class="form-group">
             <label for="nome">Nome</label>
             <input type="text" class="form-control" id="nome" placeholder="Nome da quadra">
@@ -38,8 +38,15 @@
         </select>
         </div>
         <div class="form-group">
-        <label for="descricao">Descrição</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <label for="foto">Imagem da quadra</label>
+            <input type="file" name="foto" class="form-control" id="tipos">
+        </div>
+        <div class="form-group">
+            <label for="descricao">Descrição</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Registar</button>
         </div>
     </form>
 @stop
