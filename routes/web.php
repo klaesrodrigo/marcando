@@ -21,6 +21,7 @@ Route::get('/admin', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('register', 'QuadraController@create');
-    Route::resource('quadras', 'QuadrasController');
+    Route::get('list', 'QuadraController@index');
+    Route::resource('quadras', 'QuadraController');
 });
 
