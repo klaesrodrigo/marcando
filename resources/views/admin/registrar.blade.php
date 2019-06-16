@@ -38,7 +38,7 @@
         <label for="proprietario">Proprietário</label>
         <select class="form-control" name="proprietario_id" id="proprietario">
             @foreach($clientes as $cliente)
-                @if(count($quadra) == 0)
+                @if(is_array($quadra))
                 <option value='{{ $cliente->id }}'> {{  $cliente->nome }} </option>
                 @else
                 <option {{ $cliente->id == $quadra->proprietario_id ? "selected": null}} value='{{ $cliente->id }}'> {{  $cliente->nome }} </option>
@@ -52,12 +52,18 @@
         </div>
         <div class="form-group">
             <label for="descricao">Descrição</label>
-            <textarea class="form-control" name="descricao" id="exampleFormControlTextarea1" value="{{$quadra->descricao or old('descricao')}}" rows="4"></textarea>
+            <textarea class="form-control" name="descricao" id="exampleFormControlTextarea1" value="" rows="4">{{$quadra->descricao or old('descricao')}}</textarea>
         </div>
+        @if ($acao == 1 or $acao == 2)
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Enviar</button>
         </div>
     </form>
+        @else
+        <div class="text-right">
+            <a href="{{ url()->previous() }}" class="btn btn-success btn-sm" role="button">Voltar</a>
+          </div>
+          @endif
 @stop
 
 @section('css')

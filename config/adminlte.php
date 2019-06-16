@@ -108,7 +108,7 @@ return [
     */
 
     'menu' => [
-        'MAIN NAVIGATION',
+        'Quadras',
         [
             'text' => 'Blog',
             'url'  => 'admin/blog',
@@ -116,7 +116,7 @@ return [
         ],
         [
             'text'        => 'Registrar Quadra',
-            'url'         => 'admin/register',
+            'url'         => 'admin/form',
             'icon'        => 'plus-square',
             'label_color' => 'success',
         ],
@@ -127,9 +127,9 @@ return [
             'label_color' => 'success',
         ],
         [
-            'text'        => 'Agenda',
-            'url'         => 'admin/schedule',
-            'icon'        => 'calendar',
+            'text'        => 'Configuração Quadras',
+            'url'         => 'admin/config/list',
+            'icon'        => 'cog',
             'label_color' => 'success',
         ],
         'ACCOUNT SETTINGS',

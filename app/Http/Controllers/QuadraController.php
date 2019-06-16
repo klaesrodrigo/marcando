@@ -23,7 +23,7 @@ class QuadraController extends Controller
                     ->select('quadras.*', 'clientes.nome AS cliente')
                     ->get();
 
-        return view('admin/lista', ['quadras' => $quadras]);
+        return view('admin/lista', ['quadras' => $quadras, 'acao' => 1]);
     }
 
     /**
@@ -73,7 +73,9 @@ class QuadraController extends Controller
      */
     public function show($id)
     {
-        
+        $clientes = Cliente::get();
+        $quadra = Quadra::find($id);
+        return view('admin/registrar', ['quadra'=> $quadra, 'clientes' => $clientes, 'acao' => 3]);
     }
 
     /**
@@ -114,10 +116,7 @@ class QuadraController extends Controller
         $dados['imagem'] = $path; 
 
         $resp = Quadra::create($dados);
-        foreach($tipos as $tipo){
-            $data = ['quadra_id' => $resp->id, 'tipo_id' => $tipo, 'valor'=> 0];
-            DB::table('quadras_tipos')->insert($data);
-        }
+        
 
         if ($resp) {
             return redirect()->route('quadras.index')
@@ -144,6 +143,90 @@ class QuadraController extends Controller
         } else {
             return redirect()->route('quadras.index')
                             ->with('status', 'Erro ao excluir!');
+        }
+    }
+
+    public function listaQuadra(){
+        $quadras = DB::table('quadras')
+                    ->join('clientes', 'clientes.id', '=', 'quadras.proprietario_id')
+                    ->select('quadras.*', 'clientes.nome AS cliente', 'clientes.id AS cid')
+                    ->get();
+
+        return view('admin/lista', ['quadras' => $quadras, 'acao' => 2]);
+    }
+
+    public function configuraQuadra($id, $cid){
+        
+        $quadrasTipos = DB::table('quadras_tipos AS qa')
+                    ->join('tipos AS t', 't.id', '=', 'qa.tipo_id')
+                    ->join('quadras AS q', 'q.id', '=', 'qa.quadra_id')
+                    ->join('clientes AS c', 'c.id', '=', 'q.proprietario_id')
+                    ->select('c.nome AS cliente', 'q.nome AS quadra', 't.tipo', 'qa.*')
+                    ->where('qa.quadra_id', '=', $id)
+                    ->where('q.proprietario_id', '=', $cid)
+                    ->get();
+        
+        $quadra = DB::table('quadras')
+                    ->join('clientes', 'clientes.id', '=', 'quadras.proprietario_id')
+                    ->select('quadras.*', 'clientes.nome AS cliente', 'clientes.id AS cid')
+                    ->where('quadras.id', '=', $id)
+                    ->get();
+        $tipos = Tipo::orderBy('tipo')->get();
+        return view('admin/config', ['quadra' => $quadra, 'tipos' => $tipos, 'quadrasTipos' => $quadrasTipos]);
+    }
+
+    public function insereQuadraTipo(Request $request){
+        $dados = $request->all();
+        $cid = $dados['cid'];
+        unset($dados['_token']);
+        unset($dados['cid']);
+        $resp = DB::table('quadras_tipos')->insert($dados);
+        if ($resp) {
+            return redirect()->route('quadras.config', [$dados['quadra_id'],$cid])
+                   ->with('status', 'Ok! Quadra Inserida com Sucesso');
+        } else {
+            return redirect()->route('quadras.config', [$quadra[0]->id,$cid])
+                   ->with('status', 'Erro... Quadra Não Inserida...');
+        }
+    }
+
+    public function destroyQuadraTipo($id, $cid){
+        $quadra = DB::table('quadras_tipos')->where('id', '=', $id)->get();
+        if(DB::table('quadras_tipos')->where('id', '=', $id)->delete()){
+            return redirect()->route('quadras.config', [$quadra[0]->quadra_id,$cid])
+                   ->with('status', 'Ok! Quadra Inserida com Sucesso');
+        } else {
+            return redirect()->route('quadras.config', [$quadra[0]->id,$cid])
+                ->with('status', 'Erro... Quadra Não Inserida...');
+        }
+    }
+
+    public function editQuadraTipo($id){
+        $quadra = DB::table('quadras_tipos AS qa')
+        ->join('tipos AS t', 't.id', '=', 'qa.tipo_id')
+        ->join('quadras AS q', 'q.id', '=', 'qa.quadra_id')
+        ->join('clientes AS c', 'c.id', '=', 'q.proprietario_id')
+        ->select('q.id', 'c.nome AS cliente', 'c.id AS cid', 'qa.id AS qaid', 'qa.valor')
+        ->where('qa.id', '=', $id)
+        ->get();
+        $tipos = Tipo::orderBy('tipo')->get();
+        return view('admin/config', ['quadra' => $quadra, 'tipos' => $tipos, 'acao' => 1]);
+    }
+
+    public function updateQuadraTipo(Request $request, $qaid, $id, $cid ){
+        $dados = $request->all();
+        unset($dados['_token']);
+        unset($dados['_method']);
+        unset($dados['cid']);
+        $resp = DB::table('quadras_tipos')
+                    ->where('id', $qaid)
+                    ->update($dados);
+        if($resp){
+            return redirect()->route('quadras.config', [$id,$cid])
+                    ->with('status', 'Ok! Quadra Inserida com Sucesso');
+        } else {
+            return redirect()->route('quadras.config', [$id,$cid])
+                ->with('status', 'Erro... Quadra Não Inserida...');
         }
     }
 }

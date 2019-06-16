@@ -37,6 +37,7 @@
         <td> {{ $quadra->cliente }} </td>
         <td> {{ $quadra->endereco }} </td>
         <td> <img src="{{ asset('storage/'.$quadra->imagem)}}" style='width: 120px; height: 80px;'> </td>
+        @if($acao == 1)
         <td> <a href="{{ route('quadras.edit', $quadra->id) }}" class="btn btn-info btn-sm" role="button">Alterar</a>&nbsp;
           <a href="{{ route('quadras.show', $quadra->id) }}" class="btn btn-success btn-sm" role="button">Consultar</a>&nbsp;
           <form method="post" action="{{ route('quadras.destroy', $quadra->id)}}" style="display: inline-block" onsubmit="return confirm('Confirma Exclusão desta Candidata?')">          
@@ -45,6 +46,12 @@
             <input type="submit" class="btn btn-danger btn-sm" value="Excluir">
           </form>
         </td>
+        @else
+        <td>
+            {{-- <button name="quadra_id" type="submit" class="btn btn-info btn-sm" value="{{ $quadra->id }}">Configurar</button> --}}
+            <a href="{{ route('quadras.config', [$quadra->id,$quadra->cid]) }}" class="btn btn-success btn-sm" role="button">Consultar</a>&nbsp;
+        </td>
+        @endif
       </tr>
   
       @endforeach

@@ -20,8 +20,15 @@ Route::get('/admin', function () {
 });
 
 Route::prefix('admin')->group(function () {
-    Route::get('register', 'QuadraController@create');
+    Route::get('form', 'QuadraController@create');
     Route::get('list', 'QuadraController@index');
+    Route::get('config/list', 'QuadraController@listaQuadra');
+    Route::get('config/{id}/{cid}', 'QuadraController@configuraQuadra')->name('quadras.config');
+    Route::post('config', 'QuadraController@configuraQuadra')->name('quadras.tipo');
+    Route::delete('config/delete/{id}/{cid}', 'QuadraController@destroyQuadraTipo')->name('quadras.tipoDestroy');
+    Route::get('config/{id}', 'QuadraController@editQuadraTipo')->name('quadras.tipoEdit');
+    Route::put('config/{qaid}/{id}/{cid}', 'QuadraController@updateQuadraTipo')->name('quadras.tipoUpdate');
+    Route::post('config/insere/{id}/{cid}', 'QuadraController@insereQuadraTipo')->name('quadras.insereTipo');
     Route::resource('quadras', 'QuadraController');
 });
 
