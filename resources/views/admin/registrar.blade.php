@@ -13,41 +13,36 @@
 @stop
 
 @section('content')
-
     @if ($acao == 1)
     <form method="post" action="{{ route('quadras.store') }}" enctype="multipart/form-data">
 
     @elseif ($acao == 2)
-    <form method="post" action="{{ route('quadras.update', $reg->id) }}" enctype="multipart/form-data">
+    <form method="post" action="{{ route('quadras.update', $quadra->id) }}" enctype="multipart/form-data">
     {{ method_field('put') }} 
 
     @endif 
         {{ csrf_field() }}
         <div class="form-group">
             <label for="nome">Nome</label>
-            <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome da quadra">
+            <input type="text" class="form-control" name="nome" id="nome" value="{{$quadra->nome or old('nome')}}" placeholder="Nome da quadra">
         </div>
         <div class="form-group">
             <label for="telefone">Telefone</label>
-            <input type="text" class="form-control" name="telefone" id="telefone" placeholder="+55 XX XXXXX XXXX">
+            <input type="text" class="form-control" name="telefone" id="telefone" value="{{$quadra->telefone or old('telefone')}}" placeholder="+55 XX XXXXX XXXX">
         </div>
         <div class="form-group">
             <label for="endereco">Endereço</label>
-            <input type="text" class="form-control" name="endereco" id="endereco" placeholder="Av, Rua, Travessa...">
+            <input type="text" class="form-control" name="endereco" id="endereco" value="{{$quadra->endereco or old('endereco')}}" placeholder="Av, Rua, Travessa...">
         </div>
         <div class="form-group">
         <label for="proprietario">Proprietário</label>
         <select class="form-control" name="proprietario_id" id="proprietario">
             @foreach($clientes as $cliente)
+                @if(count($quadra) == 0)
                 <option value='{{ $cliente->id }}'> {{  $cliente->nome }} </option>
-            @endforeach
-        </select>
-        </div>
-        <div class="form-group">
-        <label for="tipos">Tipos de quadras</label>
-        <select multiple class="form-control" name="tipos[]" id="tipos">
-            @foreach($tipos as $tipo)
-            <option value='{{ $tipo->id }}'> {{  $tipo->tipo }} </option>
+                @else
+                <option {{ $cliente->id == $quadra->proprietario_id ? "selected": null}} value='{{ $cliente->id }}'> {{  $cliente->nome }} </option>
+                @endif
             @endforeach
         </select>
         </div>
@@ -57,10 +52,10 @@
         </div>
         <div class="form-group">
             <label for="descricao">Descrição</label>
-            <textarea class="form-control" name="descricao" id="exampleFormControlTextarea1" rows="4"></textarea>
+            <textarea class="form-control" name="descricao" id="exampleFormControlTextarea1" value="{{$quadra->descricao or old('descricao')}}" rows="4"></textarea>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Registar</button>
+            <button type="submit" class="btn btn-primary">Enviar</button>
         </div>
     </form>
 @stop
