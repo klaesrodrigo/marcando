@@ -21,13 +21,14 @@
             <input type="hidden" class="form-control" name="quadra_id" id="quadra_id" value="{{ $quadra[0]->id }}">
             <input type="hidden" class="form-control" name="cid" id="cid" value="{{ $quadra[0]->cid }}">
         <div class="form-group">
-        <label for="proprietario">Proprietário</label>
+        <label for="proprietario">Tipo da quadra</label>
         <select class="form-control" name="tipo_id" id="proprietario">
+            <option value="">Selecione o tipo da quadra...</option>
             @foreach($tipos as $tipo)
             @if(!isset($acao))
             <option value="{{ $tipo->id }}">{{ $tipo->tipo }}</option>
             @else
-            <option {{ $tipo->id == $quadra[0]->qaid ? "selected" : null}} value="{{ $tipo->id }}">{{ $tipo->tipo }}</option>
+            <option {{ $tipo->id == $quadra[0]->tipo_id ? "selected" : null}} value="{{ $tipo->id }}">{{ $tipo->tipo }}</option>
             @endif
             @endforeach
         </select>
@@ -54,7 +55,7 @@
             @foreach ($quadrasTipos as $quadraTipo)
             <tr class="d-flex align-items-middle">
             <td> {{ $quadraTipo->tipo }} </td>
-            <td> {{ $quadraTipo->valor }} </td>
+            <td id="preco"> R$ {{ number_format($quadraTipo->valor,2,',','.') }} </td>
             <td> <a href="{{ route('quadras.tipoEdit', $quadraTipo->id) }}" class="btn btn-info btn-sm" role="button">Alterar</a>&nbsp;
                 <form method="post" action="{{ route('quadras.tipoDestroy', [$quadraTipo->id,  $quadra[0]->cid])}}" style="display: inline-block" onsubmit="return confirm('Confirma Exclusão desta Candidata?')">          
                 {{ method_field('delete') }}
@@ -76,5 +77,4 @@
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
 @stop

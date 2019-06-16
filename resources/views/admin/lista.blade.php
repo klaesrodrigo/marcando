@@ -58,6 +58,7 @@
   
     </tbody>
   </table>
+  {{ $quadras->links() }}
 @stop
 
 @section('css')

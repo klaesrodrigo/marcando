@@ -21,7 +21,7 @@ class QuadraController extends Controller
         $quadras = DB::table('quadras')
                     ->join('clientes', 'clientes.id', '=', 'quadras.proprietario_id')
                     ->select('quadras.*', 'clientes.nome AS cliente')
-                    ->get();
+                    ->paginate(1);
 
         return view('admin/lista', ['quadras' => $quadras, 'acao' => 1]);
     }
@@ -206,7 +206,7 @@ class QuadraController extends Controller
         ->join('tipos AS t', 't.id', '=', 'qa.tipo_id')
         ->join('quadras AS q', 'q.id', '=', 'qa.quadra_id')
         ->join('clientes AS c', 'c.id', '=', 'q.proprietario_id')
-        ->select('q.id', 'c.nome AS cliente', 'c.id AS cid', 'qa.id AS qaid', 'qa.valor')
+        ->select('q.id', 'c.nome AS cliente', 'c.id AS cid', 'qa.id AS qaid', 'qa.valor', 'qa.tipo_id')
         ->where('qa.id', '=', $id)
         ->get();
         $tipos = Tipo::orderBy('tipo')->get();

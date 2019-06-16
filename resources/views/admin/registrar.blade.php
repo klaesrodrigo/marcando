@@ -24,19 +24,19 @@
         {{ csrf_field() }}
         <div class="form-group">
             <label for="nome">Nome</label>
-            <input type="text" class="form-control" name="nome" id="nome" value="{{$quadra->nome or old('nome')}}" placeholder="Nome da quadra">
+            <input {{ $acao == 3 ? "disabled" : null }} type="text" class="form-control" name="nome" id="nome" value="{{$quadra->nome or old('nome')}}" placeholder="Nome da quadra">
         </div>
         <div class="form-group">
             <label for="telefone">Telefone</label>
-            <input type="text" class="form-control" name="telefone" id="telefone" value="{{$quadra->telefone or old('telefone')}}" placeholder="+55 XX XXXXX XXXX">
+            <input {{ $acao == 3 ? "disabled" : null }} type="text" class="form-control" name="telefone" id="telefone" value="{{$quadra->telefone or old('telefone')}}" placeholder="XX XXXXX XXXX">
         </div>
         <div class="form-group">
             <label for="endereco">Endereço</label>
-            <input type="text" class="form-control" name="endereco" id="endereco" value="{{$quadra->endereco or old('endereco')}}" placeholder="Av, Rua, Travessa...">
+            <input {{ $acao == 3 ? "disabled" : null }} type="text" class="form-control" name="endereco" id="endereco" value="{{$quadra->endereco or old('endereco')}}" placeholder="Av, Rua, Travessa...">
         </div>
         <div class="form-group">
         <label for="proprietario">Proprietário</label>
-        <select class="form-control" name="proprietario_id" id="proprietario">
+        <select {{ $acao == 3 ? "disabled" : null }} class="form-control" name="proprietario_id" id="proprietario">
             @foreach($clientes as $cliente)
                 @if(is_array($quadra))
                 <option value='{{ $cliente->id }}'> {{  $cliente->nome }} </option>
@@ -48,11 +48,11 @@
         </div>
         <div class="form-group">
             <label for="foto">Imagem da quadra</label>
-            <input type="file" name="imagem" class="form-control" id="imagem">
+            <input {{ $acao == 3 ? "disabled" : null }} type="file" name="imagem" class="form-control" id="imagem">
         </div>
         <div class="form-group">
             <label for="descricao">Descrição</label>
-            <textarea class="form-control" name="descricao" id="exampleFormControlTextarea1" value="" rows="4">{{$quadra->descricao or old('descricao')}}</textarea>
+            <textarea {{ $acao == 3 ? "disabled" : null }} class="form-control" name="descricao" id="exampleFormControlTextarea1" value="" rows="4">{{$quadra->descricao or old('descricao')}}</textarea>
         </div>
         @if ($acao == 1 or $acao == 2)
         <div class="form-group">
@@ -71,5 +71,12 @@
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/js/jquery.mask.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#telefone').mask('00 00000-0000', {reverse: true});
+  });
+</script>  
 @stop
