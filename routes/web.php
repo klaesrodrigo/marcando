@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Route::get('/admin', function () {
     return view('admin/index');
-});
+})->middleware('auth');
 
 Route::prefix('admin')->group(function () {
     Route::get('form', 'QuadraController@create');
@@ -32,3 +32,8 @@ Route::prefix('admin')->group(function () {
     Route::resource('quadras', 'QuadraController');
 });
 
+Auth::routes();
+
+Route::get('/home', function(){
+    return redirect('/admin');
+})->name('home');
