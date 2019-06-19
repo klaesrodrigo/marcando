@@ -17,7 +17,7 @@ return [
 
     'title_prefix' => '',
 
-    'title_postfix' => '- Área Restrita',
+    'title_postfix' => ' - Área Restrita',
 
     /*
     |--------------------------------------------------------------------------
@@ -130,6 +130,19 @@ return [
             'text'        => 'Configuração Quadras',
             'url'         => 'admin/config/list',
             'icon'        => 'cog',
+            'label_color' => 'success',
+        ],
+        'Relatórios',
+        [
+            'text'        => 'Gráfico',
+            'url'         => 'admin/graf',
+            'icon'        => 'poll',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Relatório em PDF',
+            'url'         => 'admin/rel',
+            'icon'        => 'poll',
             'label_color' => 'success',
         ],
     ],

@@ -23,9 +23,13 @@ Route::post('/marcar', 'MarcacaoController@store')->name('marcacoes.store');
 Route::get('/mail/{id}', 'MarcacaoController@enviarEmail')->name('enviarEmail');
 
 Route::prefix('admin')->group(function () {
+    Route::get('marcacao/{id}', 'MarcacaoController@show')->name('marcacao.index');
+    Route::get('graf', 'QuadraController@graf')->name('graf');
+    Route::get('rel', 'QuadraController@rel')->name('rel');
+    Route::delete('marcacao/{id}', 'MarcacaoController@destroy')->name('marcacao.destroy');
     Route::get('form', 'QuadraController@create');
     Route::get('list', 'QuadraController@index');
-    Route::get('config/list', 'QuadraController@listaQuadra');
+    Route::get('config/list', 'QuadraController@listaQuadra')->name('list');
     Route::get('config/{id}/{cid}', 'QuadraController@configuraQuadra')->name('quadras.config');
     Route::post('config', 'QuadraController@configuraQuadra')->name('quadras.tipo');
     Route::delete('config/delete/{id}/{cid}', 'QuadraController@destroyQuadraTipo')->name('quadras.tipoDestroy');

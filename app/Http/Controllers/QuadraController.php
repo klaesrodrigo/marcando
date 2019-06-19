@@ -21,7 +21,7 @@ class QuadraController extends Controller
         $quadras = DB::table('quadras')
                     ->join('clientes', 'clientes.id', '=', 'quadras.proprietario_id')
                     ->select('quadras.*', 'clientes.nome AS cliente')
-                    ->paginate(1);
+                    ->paginate(3);
 
         return view('admin/lista', ['quadras' => $quadras, 'acao' => 1]);
     }
@@ -35,7 +35,7 @@ class QuadraController extends Controller
     {
         
        
-        $clientes = Cliente::get();
+        $clientes = Cliente::orderBy('nome')->get();
         $tipos = Tipo::get();
         $quadra = [];
         // var_dump($clientes);
@@ -55,6 +55,7 @@ class QuadraController extends Controller
             'nome' => 'required|min:2|max:50',
             'telefone' => 'required',
             'descricao' => 'required|min:10|max:150',
+            'imagem' => 'required',
         ]);
         $dados = $request->all();
         unset($dados['_token']);
@@ -80,7 +81,7 @@ class QuadraController extends Controller
      */
     public function show($id)
     {
-        $clientes = Cliente::get();
+        $clientes = Cliente::orderBy('nome')->get();
         $quadra = Quadra::find($id);
         return view('admin/registrar', ['quadra'=> $quadra, 'clientes' => $clientes, 'acao' => 3]);
     }
@@ -93,7 +94,7 @@ class QuadraController extends Controller
      */
     public function edit($id)
     {
-        $clientes = Cliente::get();
+        $clientes = Cliente::orderBy('nome')->get();
         $quadra = Quadra::find($id);
         return view('admin/registrar', ['quadra'=> $quadra, 'clientes' => $clientes, 'acao' => 2]);
     }
@@ -109,10 +110,10 @@ class QuadraController extends Controller
     {
         $dados = $request->all();
         // unset($dados['_token']);
-        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
 
-            if (Storage::exists($reg->foto)) {
-                Storage::delete($reg->foto);
+            if (Storage::exists($dados->foto)) {
+                Storage::delete($dados->foto);
             }
 
             $path = $request->file('foto')->store('fotos');
@@ -253,5 +254,31 @@ class QuadraController extends Controller
                     ->select('t.tipo', 'qt.*')
                     ->get();
         return view('site/ver', ['quadra' => $quadra, 'tipos' => $tipos, 'acao' => 1]);
+    }
+
+
+
+    public function graf() {
+        $quadras = Quadra::selectRaw('quadras.nome as nome, count(*) as num')
+        ->join('quadras_tipos', 'quadras_tipos.quadra_id', '=', 'quadras.id')
+        ->join('marcacoes', 'marcacoes.quadra_tipo_id', '=', 'quadras_tipos.id')
+        ->groupBy('nome')
+        ->get();
+
+        return view('admin/graf', ['quadras' => $quadras]);
+    }
+
+    public function rel() {
+
+        $quadras = Quadra::selectRaw('quadras.*, sum(marcacoes.valor) as sum,  clientes.nome as proprietario')
+                                ->join('clientes', 'clientes.id', '=', 'quadras.proprietario_id')
+                                ->join('quadras_tipos', 'quadras_tipos.quadra_id', '=', 'quadras.id')
+                                ->join('marcacoes', 'marcacoes.quadra_tipo_id', '=', 'quadras_tipos.id')
+                                ->groupBy('quadras.id')
+                                ->get();
+
+        
+         return \PDF::loadView('admin/rel', ['quadras'=>$quadras])
+         ->stream();
     }
 }

@@ -38,7 +38,7 @@
         </div>
         <div class="form-group">
             <label for="telefone">Telefone</label>
-            <input {{ $acao == 3 ? "disabled" : null }} type="text" class="form-control" name="telefone" id="telefone" value="{{$quadra->telefone or old('telefone')}}" placeholder="XX XXXXX XXXX">
+            <input {{ $acao == 3 ? "disabled" : null }} type="text" class="form-control" name="telefone" id="telefone" value="{{$quadra->telefone or old('telefone')}}" placeholder="XX XXXX XXXXX">
         </div>
         <div class="form-group">
             <label for="endereco">Endereço</label>
@@ -58,7 +58,7 @@
         </div>
         <div class="form-group">
             <label for="foto">Imagem da quadra</label>
-            <input {{ $acao == 3 ? "disabled" : null }} type="file" name="imagem" class="form-control" id="imagem">
+            <input {{ $acao == 3 ? "disabled" : null }} value="{{old('endereco')}}" type="file" name="imagem" class="form-control" id="imagem">
         </div>
         <div class="form-group">
             <label for="descricao">Descrição</label>
@@ -86,7 +86,7 @@
 
 <script>
   $(document).ready(function() {
-    $('#telefone').mask('00 00000-0000', {reverse: true});
+    $('#telefone').mask('00 0000-00000', {reverse: true});
   });
 </script>  
 @stop

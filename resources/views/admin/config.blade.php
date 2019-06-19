@@ -57,7 +57,7 @@
             <td> {{ $quadraTipo->tipo }} </td>
             <td id="preco"> R$ {{ number_format($quadraTipo->valor,2,',','.') }} </td>
             <td> <a href="{{ route('quadras.tipoEdit', $quadraTipo->id) }}" class="btn btn-info btn-sm" role="button">Alterar</a>&nbsp;
-                <form method="post" action="{{ route('quadras.tipoDestroy', [$quadraTipo->id,  $quadra[0]->cid])}}" style="display: inline-block" onsubmit="return confirm('Confirma Exclusão desta Candidata?')">          
+                <form method="post" action="{{ route('quadras.tipoDestroy', [$quadraTipo->id,  $quadra[0]->cid])}}" style="display: inline-block" onsubmit="return confirm('Confirma Exclusão destr tipo?')">          
                 {{ method_field('delete') }}
                 {{ csrf_field() }}
                 <input type="submit" class="btn btn-danger btn-sm" value="Excluir">

@@ -17,7 +17,7 @@ class MarcacaoController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -71,7 +71,16 @@ class MarcacaoController extends Controller
      */
     public function show($id)
     {
-        //
+        $marcacoes = DB::table('marcacoes AS m')
+                        ->join('usuarios AS u', 'm.usuario_id', '=', 'u.id')
+                        ->join('quadras_tipos AS qt', 'qt.id', '=', 'm.quadra_tipo_id')
+                        ->join('quadras AS q', 'q.id', '=', 'qt.quadra_id')
+                        ->join('tipos AS t', 't.id', '=', 'qt.tipo_id')
+                        ->select(DB::raw('u.nome, u.telefone, u.email, t.tipo, q.nome AS quadra, m.data_hora AS data, m.id'))
+                        ->where('q.id', '=', $id)
+                        ->orderBy('data')
+                        ->paginate(10);
+        return view('admin/marcacoes', ['marcacoes' => $marcacoes]);
     }
 
     /**
@@ -105,7 +114,15 @@ class MarcacaoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $marcacao = Marcacoe::find($id);
+
+        if ($marcacao->delete()) {
+            return redirect()->route('list')
+                            ->with('status', $marcacao->id . ' Excluído!');
+        } else {
+            return redirect()->route('list')
+                            ->with('status', 'Erro ao excluir!');
+        }
     }
 
     public function enviarEmail($quadra_tipo_id, $marcacao, $nome){

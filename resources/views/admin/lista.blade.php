@@ -40,7 +40,7 @@
         @if($acao == 1)
         <td> <a href="{{ route('quadras.edit', $quadra->id) }}" class="btn btn-info btn-sm" role="button">Alterar</a>&nbsp;
           <a href="{{ route('quadras.show', $quadra->id) }}" class="btn btn-success btn-sm" role="button">Consultar</a>&nbsp;
-          <form method="post" action="{{ route('quadras.destroy', $quadra->id)}}" style="display: inline-block" onsubmit="return confirm('Confirma Exclusão desta Candidata?')">          
+          <form method="post" action="{{ route('quadras.destroy', $quadra->id)}}" style="display: inline-block" onsubmit="return confirm('Confirma Exclusão desta Quadra?')">          
             {{ method_field('delete') }}
             {{ csrf_field() }}
             <input type="submit" class="btn btn-danger btn-sm" value="Excluir">
@@ -49,7 +49,8 @@
         @else
         <td>
             {{-- <button name="quadra_id" type="submit" class="btn btn-info btn-sm" value="{{ $quadra->id }}">Configurar</button> --}}
-            <a href="{{ route('quadras.config', [$quadra->id,$quadra->cid]) }}" class="btn btn-success btn-sm" role="button">Consultar</a>&nbsp;
+            <a href="{{ route('quadras.config', [$quadra->id,$quadra->cid]) }}" class="btn btn-primary btn-sm" role="button">Configurar</a>&nbsp;
+            <a href="{{ route('marcacao.index', [$quadra->id])}}" class="btn btn-info btn-sm" role="button">Marcações</a>&nbsp;
         </td>
         @endif
       </tr>
