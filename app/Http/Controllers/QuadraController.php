@@ -33,6 +33,8 @@ class QuadraController extends Controller
      */
     public function create()
     {
+        
+       
         $clientes = Cliente::get();
         $tipos = Tipo::get();
         $quadra = [];
@@ -49,6 +51,11 @@ class QuadraController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'nome' => 'required|min:2|max:50',
+            'telefone' => 'required',
+            'descricao' => 'required|min:10|max:150',
+        ]);
         $dados = $request->all();
         unset($dados['_token']);
         $path = $request->file('imagem')->store('fotos', 'public');
@@ -60,7 +67,7 @@ class QuadraController extends Controller
             return redirect()->route('quadras.index')
                    ->with('status', 'Ok! Quadra Inserida com Sucesso');
         } else {
-            return redirect()->route('candidatas.store')
+            return redirect()->route('quadras.store')
                    ->with('status', 'Erro... Quadra Não Inserida...');
         }
     }
@@ -228,5 +235,23 @@ class QuadraController extends Controller
             return redirect()->route('quadras.config', [$id,$cid])
                 ->with('status', 'Erro... Quadra Não Inserida...');
         }
+    }
+
+    public function listaQuadrasSite(){       
+        $quadras = Quadra::orderBy('nome')->get();
+
+        return view('site/index', ['quadras' => $quadras]);
+    }
+
+    public function ver($id){       
+        $quadra = Quadra::find($id);
+        $tipos = DB::table('tipos AS t')
+                    ->join('quadras_tipos AS qt', function($join){
+                        $join->on('qt.tipo_id', '=', 't.id');
+                    })
+                    ->where('qt.quadra_id', '=', $id)
+                    ->select('t.tipo', 'qt.*')
+                    ->get();
+        return view('site/ver', ['quadra' => $quadra, 'tipos' => $tipos, 'acao' => 1]);
     }
 }

@@ -11,13 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('site/index');
-});
+Route::get('/', 'QuadraController@listaQuadrasSite')->name('inicio');
 
 Route::get('/admin', function () {
     return view('admin/index');
 })->middleware('auth');
+
+Route::get('/ver/{id}', 'QuadraController@ver')->name('quadras.ver');
+
+Route::post('/marcar', 'MarcacaoController@store')->name('marcacoes.store');
+Route::get('/mail/{id}', 'MarcacaoController@enviarEmail')->name('enviarEmail');
 
 Route::prefix('admin')->group(function () {
     Route::get('form', 'QuadraController@create');
