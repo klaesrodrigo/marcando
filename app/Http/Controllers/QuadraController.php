@@ -150,7 +150,7 @@ class QuadraController extends Controller
         $quadras = DB::table('quadras')
                     ->join('clientes', 'clientes.id', '=', 'quadras.proprietario_id')
                     ->select('quadras.*', 'clientes.nome AS cliente', 'clientes.id AS cid')
-                    ->get();
+                    ->paginate(5);
 
         return view('admin/lista', ['quadras' => $quadras, 'acao' => 2]);
     }
